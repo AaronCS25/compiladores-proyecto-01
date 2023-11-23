@@ -55,18 +55,18 @@ Token* Scanner::nextToken() {
   c = nextChar();
   while (c == ' ' || c == '\t'  || c == '\n') c = nextChar();
   if (c == '\0') return new Token(Token::END);
-  if (c == '/')
-  {
-    c = nextChar();
-    if (c == '/')
-    {
-      while (c != '\n') c = nextChar();
-      c = nextChar();
-    }
-    else {  rollBack(); }
-    rollBack();
-    c = nextChar();
-  }
+  // if (c == '/')
+  // {
+  //   c = nextChar();
+  //   if (c == '/')
+  //   {
+  //     while (c != '\n') c = nextChar();
+  //     c = nextChar();
+  //   }
+  //   else {  rollBack(); }
+  //   rollBack();
+  //   c = nextChar();
+  // }
   
   startLexema();
   if (isdigit(c)) {
@@ -79,9 +79,13 @@ Token* Scanner::nextToken() {
     while (isalpha(c) || isdigit(c) || c=='_') c = nextChar();
     rollBack();
     string lex = getLexema();
+    std::cout << "Lexema: " << lex << std::endl;
+
     Token::Type ttype = checkReserved(lex);
-    if (ttype != Token::ERR)
+    if (ttype != Token::ERR) {
       token = new Token(ttype);
+      std::cout << "Is Reserved: " << token << std::endl;
+    }
     else
       token = new Token(Token::ID, getLexema()); 
   } else if (strchr("()+-*/;=<,!:", c)) {
@@ -115,6 +119,7 @@ Token* Scanner::nextToken() {
   } else {
     token = new Token(Token::ERR, getLexema());
   }
+  std::cout << token << std::endl;
   return token;
 }
 
@@ -140,7 +145,7 @@ string Scanner::getLexema() {
 }
 
 Token::Type Scanner::checkReserved(string lexema) {
-  std::unordered_map<std::string,Token::Type>::const_iterator it = reserved.find (lexema);
+  auto it = reserved.find(lexema);
   if (it == reserved.end())
     return Token::ERR;
  else
