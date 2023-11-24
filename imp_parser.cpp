@@ -6,7 +6,7 @@
 const char* Token::token_names[35] = {
   "LPAREN" , "RPAREN", "PLUS", "MINUS", "MULT","DIV","EXP","LT","LTEQ","EQ",
   "NUM", "ID", "PRINT", "SEMICOLON", "COMMA", "ASSIGN", "CONDEXP", "IF", "THEN", "ELSE", "ENDIF", "WHILE", "DO",
-  "ENDWHILE", "ERR", "END", "VAR" , "NOT", "TRUE", "FALSE", "AND", "OR"
+  "ENDWHILE", "ERR", "END", "VAR" , "NOT", "TRUE", "FALSE", "AND", "OR",
   "FOR", "COLON" , "ENDFOR" };
 
 Token::Token(Type type):type(type) { lexema = ""; }
@@ -45,7 +45,6 @@ Scanner::Scanner(string s):input(s),first(0),current(0) {
   reserved["or"] = Token::OR;
   reserved["for"] = Token::FOR;
   reserved["endfor"] = Token::ENDFOR;
-  
 }
 
 Token* Scanner::nextToken() {
@@ -53,6 +52,7 @@ Token* Scanner::nextToken() {
   char c;
   // consume whitespaces
   c = nextChar();
+  //cout << "CHAR: " << c << endl;
   while (c == ' ' || c == '\t'  || c == '\n') c = nextChar();
   if (c == '\0') return new Token(Token::END);
   // if (c == '/')
@@ -65,9 +65,12 @@ Token* Scanner::nextToken() {
   //   }
   //   else {  rollBack(); }
   //   rollBack();
-  //   c = nextChar();
+  //   cout << "CURRENT CHAR: " << input[current] << endl;
+  //   return this->nextToken();
   // }
-  
+
+  //cout << "CHAR: " << c << endl;
+
   startLexema();
   if (isdigit(c)) {
     c = nextChar();
@@ -79,12 +82,13 @@ Token* Scanner::nextToken() {
     while (isalpha(c) || isdigit(c) || c=='_') c = nextChar();
     rollBack();
     string lex = getLexema();
-    std::cout << "Lexema: " << lex << std::endl;
+    //std::cout << "Lexema: " << lex << std::endl;
 
     Token::Type ttype = checkReserved(lex);
+    //cout << "Ttype: " << ttype << std::endl;
     if (ttype != Token::ERR) {
       token = new Token(ttype);
-      std::cout << "Is Reserved: " << token << std::endl;
+      //std::cout << "Is Reserved: " << token << std::endl;
     }
     else
       token = new Token(Token::ID, getLexema()); 
@@ -99,12 +103,20 @@ Token* Scanner::nextToken() {
       if (c == '*') token = new Token(Token::EXP);
       else { rollBack(); token = new Token(Token::MULT); }
       break;     
-    case '/': token = new Token(Token::DIV); break;
+    case '/': //token = new Token(Token::DIV); break;
+      c = nextChar();
+      if (c == '/')
+      {
+        while (c != '\n') c = nextChar();
+        token = this->nextToken();
+      }
+      else { rollBack(); token = new Token(Token::DIV); }
+      break;
     case ';': token = new Token(Token::SEMICOLON); break;
     case ',': token = new Token(Token::COMMA); break;
     case '!': token = new Token(Token::NOT); break;
     case ':': token = new Token(Token::COLON); break;      
-    case '=': token = new Token(Token::ASSIGN); break;
+    case '=':
       c = nextChar();
       if (c == '=') token = new Token(Token::EQ);
       else { rollBack(); token = new Token(Token::ASSIGN); }
@@ -119,7 +131,7 @@ Token* Scanner::nextToken() {
   } else {
     token = new Token(Token::ERR, getLexema());
   }
-  std::cout << token << std::endl;
+  //std::cout << token << std::endl;
   return token;
 }
 

@@ -1,0 +1,5 @@
+var int x;
+for x : 10, 6 do //comentario
+    print(x) //no deberia ejecutarse
+endfor //comentario
+

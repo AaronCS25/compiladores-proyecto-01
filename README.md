@@ -18,40 +18,25 @@ endwhile
 
 **Reporte:**
 
-EL cambio realizado para poder aceptar comentarios en el lenguaje IMP se realizó en el método nextToken() de la clase Scanner. Este método es el encargado de identificar los tokens y retornarlos, por lo que es en este punto en el que se deberían ignorar los comentarios. La estrategia a utilizar fue similar a cómo se ignoran los espacios en blanco:
+EL cambio realizado para poder aceptar comentarios en el lenguaje IMP se realizó en el método nextToken() de la clase Scanner. Este método es el encargado de identificar los tokens y retornarlos, por lo que es en este punto en el que se deberían ignorar los comentarios. La parte donde se realizó el cambio fue específicamente en la sección de las condiciones donde se reconoce el símbolo de alguna operación. La estrategia a utilizar fue similar a cómo se ignoran los espacios en blanco y a cómo se diferencia el operador de asignación con el de comparación:
 
-- Reconocemos los símbolos que indican el inicio de comentarios.
-- Seguimos leyendo caracteres hasta encontrar un salto de linea.
-- Se hace rollback() o nextChar() según sea conveniente para identificar los tokens después de los comentarios.
+- Leemos un caracter igual a '/'.
+- Si el siguiente caracter también es igual a '/', significa que hemos encontrado un comentario. En ese caso seguimos leyendo caracteres hasta encontrar un salto de linea. Finalmente, se retornará el siguiente token al llamar la función nextToken() recursivamente.
+- Caso contrario, hacemos rollback para ubicarnos en el primer caracter '/' y retornamos el token de división.
 
 ```cpp
-Token* Scanner::nextToken() {
-  Token* token;
-  char c;
-  // consume whitespaces
-  c = nextChar();
-  while (c == ' ' || c == '\t'  || c == '\n') c = nextChar();
-  if (c == '\0') return new Token(Token::END);
-  //--------------- CODIGO AGREGADO ---------------------//
-  if (c == '/') // MANEJO DE COMENTARIOS
-  {
-    // ¿Es comentario?
-    c = nextChar();
-    if (c == '/') 
-    {
-      // Si es comentario -> ignorar todos los caracteres hasta el primer salto de línea ('\n').
-      while (c != '\n') c = nextChar();
+    case '/':
       c = nextChar();
-    }
-    else {  rollBack(); } // Si no es comentario hacer rollback().
-    rollBack();
-    c = nextChar(); // Volver a setear c
-  }
-   
-  //------------------------- FIN ------------------------//
-  startLexema();
-    .
-    .
-    .
+      if (c == '/')
+      {
+        while (c != '\n') c = nextChar();
+        token = this->nextToken();
+      }
+      else { rollBack(); token = new Token(Token::DIV); }
+      break;
 ```
 
+## Task 02:
+
+
+## Task 03:

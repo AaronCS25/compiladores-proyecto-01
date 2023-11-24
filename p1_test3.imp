@@ -1,4 +1,4 @@
-x = // definiendo xandknakdbakjnawd
-3                   / // falla???? c++ no soporta -> int a = 5 / //holaakwdbjhabjhbadw'\n' 2
-2;
-y = 1
+var int x,y; //holaaaa
+x = 10;
+y = 2;
+print(x/y) //la division debe ejecutarse normalmente e ignorar este comentario

@@ -1,4 +1,4 @@
-var int x, n; // variables globales
+var int x, n; // variables
 n = 10; // longitud
 x = 0;
 while x < n do

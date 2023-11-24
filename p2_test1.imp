@@ -1,10 +1,6 @@
 var int x, y; 
-x = 0;
 y = 10;
-for x: 5, y do
-    print(x); 
-    y = 11;
-    print(y)
-endfor; 
-print(y)
+for x : 5, y do //comentario
+    print(x) //comentario
+endfor //comentario
 
