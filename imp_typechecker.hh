@@ -29,6 +29,8 @@ public:
   void visit(IfStatement*);
   void visit(WhileStatement*);
   void visit(ForStatement*);
+  void visit(DoWhileStatement*);
+
   
   ImpType visit(BinaryExp* e);
   ImpType visit(UnaryExp* e);

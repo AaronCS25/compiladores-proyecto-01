@@ -92,6 +92,15 @@ int ImpPrinter::visit(ForStatement* s) {
   return 0;
 }
 
+int ImpPrinter::visit(DoWhileStatement* s) {
+  cout << "do " << endl;
+  s->body->accept(this);
+  cout << "while (";
+  s->cond->accept(this);
+  cout << ")";
+  return 0;
+}
+
 int ImpPrinter::visit(BinaryExp* e) {
   e->left->accept(this);
   cout << ' ' << Exp::binopToString(e->op) << ' ';

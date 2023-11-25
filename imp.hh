@@ -154,6 +154,16 @@ public:
   ~ForStatement();
 };
 
+class DoWhileStatement : public Stm {
+public:
+  Exp* cond;
+  Body *body;
+  DoWhileStatement(Body* b, Exp* c);
+  int accept(ImpVisitor* v);
+  void accept(TypeVisitor* v);
+  ~DoWhileStatement();
+};
+
 
 class StatementList {
 public:

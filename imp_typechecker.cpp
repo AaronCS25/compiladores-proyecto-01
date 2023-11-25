@@ -108,6 +108,15 @@ void ImpTypeChecker::visit(ForStatement* s) {
  return;
 }
 
+void ImpTypeChecker::visit(DoWhileStatement* s) {
+  s->body->accept(this);
+  if (!s->cond->accept(this).match(booltype)) {
+    cout << "Condicional en DoWhileStatement debe de ser: " << booltype << endl;
+    exit(0);
+  }  
+  return;
+}
+
 ImpType ImpTypeChecker::visit(BinaryExp* e) {
   ImpType t1 = e->left->accept(this);
   ImpType t2 = e->right->accept(this);

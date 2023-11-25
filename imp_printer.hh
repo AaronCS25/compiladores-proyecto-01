@@ -17,6 +17,8 @@ public:
   int visit(IfStatement*);
   int visit(WhileStatement*);
   int visit(ForStatement*);
+  int visit(DoWhileStatement*);
+
   
   int visit(BinaryExp* e);
   int visit(UnaryExp* e);

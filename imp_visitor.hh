@@ -15,6 +15,8 @@ public:
   virtual int visit(IfStatement* e) = 0;
   virtual int visit(WhileStatement* e) = 0;
   virtual int visit(ForStatement* e) = 0;
+  virtual int visit(DoWhileStatement* e) = 0;
+
   
   virtual int visit(BinaryExp* e) = 0;
   virtual int visit(UnaryExp* e) = 0;
