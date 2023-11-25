@@ -112,6 +112,9 @@ int ImpCodeGen::visit(WhileStatement* s) {
   string l1 = next_label();
   string l2 = next_label();
 
+  this->initLabel = l1; 
+  this->endLabel = l2;
+
   codegen(l1,"skip");
   s->cond->accept(this);
   codegen(nolabel,"jmpz",l2);
@@ -119,13 +122,19 @@ int ImpCodeGen::visit(WhileStatement* s) {
   codegen(nolabel,"goto",l1);
   codegen(l2,"skip");
 
+  this->initLabel = ""; 
+  this->endLabel = "";
   return 0;
 }
 
 //* Implementar ForStatement
 int ImpCodeGen::visit(ForStatement* s) {
   string l1 = next_label();
+  string updateLabel = next_label();
   string l2 = next_label();
+
+  this->initLabel = updateLabel; 
+  this->endLabel = l2;
 
   s->e1->accept(this);
   codegen(nolabel, "store", direcciones.lookup(s->id));
@@ -135,25 +144,47 @@ int ImpCodeGen::visit(ForStatement* s) {
   codegen(nolabel,"lt");
   codegen(nolabel,"jmpz",l2);
   s->body->accept(this);
+  codegen(updateLabel,"skip");
   codegen(nolabel,"load",direcciones.lookup(s->id));
   codegen(nolabel, "push", 1);
   codegen(nolabel, "add");
   codegen(nolabel, "store", direcciones.lookup(s->id));
   codegen(nolabel,"goto",l1);
   codegen(l2,"skip");
+  
+  this->initLabel = ""; 
+  this->endLabel = "";
   return 0;
 }
 
 int ImpCodeGen::visit(DoWhileStatement* s) {
   string l1 = next_label();
+  string contidionLabel = next_label();
   string l2 = next_label();
+
+  this->initLabel = contidionLabel; 
+  this->endLabel = l2;
 
   codegen(l1,"skip");
   s->body->accept(this);
+  codegen(contidionLabel,"skip");
   s->cond->accept(this);
   codegen(nolabel,"jmpz",l2);
   codegen(nolabel,"goto",l1);
   codegen(l2,"skip");
+
+  this->initLabel = ""; 
+  this->endLabel = "";
+  return 0;
+}
+
+int ImpCodeGen::visit(BreakStatement* s) {
+  codegen(nolabel,"goto",this->endLabel);
+  return 0;
+}
+
+int ImpCodeGen::visit(ContinueStatement* s) {
+  codegen(nolabel,"goto",this->initLabel);
   return 0;
 }
 

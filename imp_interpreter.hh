@@ -26,6 +26,9 @@ public:
   int visit(WhileStatement*);
   int visit(ForStatement*);
   int visit(DoWhileStatement*);
+  int visit(BreakStatement*);
+  int visit(ContinueStatement*);
+
 
   
   int visit(BinaryExp* e);

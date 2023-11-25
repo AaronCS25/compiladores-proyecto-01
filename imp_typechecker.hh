@@ -16,6 +16,7 @@ private:
   Environment<ImpType> env;
   ImpType booltype;
   ImpType inttype;
+  bool loopFlag = false;
 
 public:
   void typecheck(Program*);
@@ -30,6 +31,9 @@ public:
   void visit(WhileStatement*);
   void visit(ForStatement*);
   void visit(DoWhileStatement*);
+  void visit(BreakStatement*);
+  void visit(ContinueStatement*);
+
 
   
   ImpType visit(BinaryExp* e);

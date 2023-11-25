@@ -86,15 +86,18 @@ void ImpTypeChecker::visit(IfStatement* s) {
 }
 
 void ImpTypeChecker::visit(WhileStatement* s) {
+  this->loopFlag = true;
   if (!s->cond->accept(this).match(booltype)) {
     cout << "Condicional en WhileStm debe de ser: " << booltype << endl;
     exit(0);
   }  
   s->body->accept(this);
+  this->loopFlag = false;
  return;
 }
 
 void ImpTypeChecker::visit(ForStatement* s) {
+  this->loopFlag = true;
   ImpType t1 = s->e1->accept(this);
   ImpType t2 = s->e2->accept(this);
   if (!t1.match(inttype) || !t2.match(inttype)) {
@@ -105,13 +108,32 @@ void ImpTypeChecker::visit(ForStatement* s) {
   env.add_var(s->id,inttype);
   s->body->accept(this);
   env.remove_level();
- return;
+  this->loopFlag = false;
+  return;
 }
 
 void ImpTypeChecker::visit(DoWhileStatement* s) {
+  this->loopFlag = true;
   s->body->accept(this);
   if (!s->cond->accept(this).match(booltype)) {
     cout << "Condicional en DoWhileStatement debe de ser: " << booltype << endl;
+    exit(0);
+  }
+  this->loopFlag = false;  
+  return;
+}
+
+void ImpTypeChecker::visit(BreakStatement* s) {
+  if (!this->loopFlag) {
+    cout << "BreakStatement fuera de un loop" << endl;
+    exit(0);
+  }  
+  return;
+}
+
+void ImpTypeChecker::visit(ContinueStatement* s) {
+  if (!this->loopFlag) {
+    cout << "ContinueStatement fuera de un loop" << endl;
     exit(0);
   }  
   return;

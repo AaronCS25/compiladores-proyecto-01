@@ -103,6 +103,9 @@ IfStatement::IfStatement(Exp* c,Body *tb, Body* fb):cond(c),tbody(tb), fbody(fb)
 WhileStatement::WhileStatement(Exp* c,Body *b):cond(c),body(b) { }
 ForStatement::ForStatement(string id, Exp* e1,Exp* e2, Body *b):id(id),e1(e1),e2(e2), body(b) { }
 DoWhileStatement::DoWhileStatement(Body* b, Exp* c):cond(c),body(b) { }
+BreakStatement::BreakStatement() {}
+ContinueStatement::ContinueStatement() {}
+
 
 
 StatementList::StatementList():slist() {}
@@ -118,6 +121,8 @@ IfStatement::~IfStatement() { delete fbody; delete tbody; delete cond; }
 WhileStatement::~WhileStatement() { delete body; delete cond; }
 ForStatement::~ForStatement() { delete body; delete e2; delete e1; }
 DoWhileStatement::~DoWhileStatement(){delete body; delete cond; }
+BreakStatement::~BreakStatement() {}
+ContinueStatement::~ContinueStatement() {}
 
 
 StatementList::~StatementList() { }
@@ -147,6 +152,14 @@ int ForStatement::accept(ImpVisitor* v) {
 }
 
 int DoWhileStatement::accept(ImpVisitor* v) {
+  return v->visit(this);
+}
+
+int BreakStatement::accept(ImpVisitor* v) {
+  return v->visit(this);
+}
+
+int ContinueStatement::accept(ImpVisitor* v) {
   return v->visit(this);
 }
 
@@ -196,6 +209,14 @@ void ForStatement::accept(TypeVisitor* v) {
 }
 
 void DoWhileStatement::accept(TypeVisitor* v) {
+  return v->visit(this);
+}
+
+void BreakStatement::accept(TypeVisitor* v) {
+  return v->visit(this);
+}
+
+void ContinueStatement::accept(TypeVisitor* v) {
   return v->visit(this);
 }
 
